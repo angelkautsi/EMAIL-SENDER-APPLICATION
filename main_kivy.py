@@ -4,11 +4,18 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from Email_sender import send_email
-from credentials import email_address, email_password
 
 class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)
+
+        self.add_widget(Label(text='Sender Email'))
+        self.sender_input = TextInput(multiline=False)
+        self.add_widget(self.sender_input)
+
+        self.add_widget(Label(text='Password'))
+        self.password_input = TextInput(password=True, multiline=False)
+        self.add_widget(self.password_input)
 
         self.add_widget(Label(text='Recipient Email'))
         self.recipient_input = TextInput(multiline=False)
@@ -30,13 +37,13 @@ class EmailForm(BoxLayout):
         self.add_widget(self.status_label)
 
     def send_email_gui(self, instance):
-        sender = email_address
-        password = email_password
+        sender = self.sender_input.text
+        password = self.password_input.text
         recipient = self.recipient_input.text
         subject = self.subject_input.text
         message = self.message_input.text
 
-        if not all([recipient, subject, message]):
+        if not all([sender, password, recipient, subject, message]):
             self.status_label.text = "All fields are required."
             return
 
