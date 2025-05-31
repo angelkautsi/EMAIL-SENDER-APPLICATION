@@ -30,8 +30,8 @@ class EmailForm(BoxLayout):
         self.add_widget(self.status_label)
 
     def send_email_gui(self, instance):
-        sender = self.sender_input.text
-        password = self.password_input.text
+        sender = email_address
+        password = email_password
         recipient = self.recipient_input.text
         subject = self.subject_input.text
         message = self.message_input.text
