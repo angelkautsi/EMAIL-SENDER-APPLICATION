@@ -10,14 +10,6 @@ class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)
 
-        self.add_widget(Label(text='Sender Email'))
-        self.sender_input = TextInput(multiline=False)
-        self.add_widget(self.sender_input)
-
-        self.add_widget(Label(text='Password'))
-        self.password_input = TextInput(password=True, multiline=False)
-        self.add_widget(self.password_input)
-
         self.add_widget(Label(text='Recipient Email'))
         self.recipient_input = TextInput(multiline=False)
         self.add_widget(self.recipient_input)
