@@ -4,6 +4,7 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from Email_sender import send_email
+from credentials import email_address, email_password
 
 class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
