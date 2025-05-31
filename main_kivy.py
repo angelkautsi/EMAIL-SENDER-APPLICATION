@@ -36,7 +36,7 @@ class EmailForm(BoxLayout):
         subject = self.subject_input.text
         message = self.message_input.text
 
-        if not all([sender, password, recipient, subject, message]):
+        if not all([recipient, subject, message]):
             self.status_label.text = "All fields are required."
             return
 
