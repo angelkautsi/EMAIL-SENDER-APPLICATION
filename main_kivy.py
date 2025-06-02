@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from Email_sender import send_email
@@ -8,21 +9,21 @@ from credentials import email_address, email_password
 
 class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)
+        super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)   #constructor
 
-        self.add_widget(Label(text='Recipient Email'))
+        self.add_widget(Label(text='Recipient Email')) #recipient button
         self.recipient_input = TextInput(multiline=False)
         self.add_widget(self.recipient_input)
 
-        self.add_widget(Label(text='Subject'))
+        self.add_widget(Label(text='Subject')) #subject textbox button
         self.subject_input = TextInput(multiline=False)
         self.add_widget(self.subject_input)
 
-        self.add_widget(Label(text='Message'))
+        self.add_widget(Label(text='Message'))  #message button / text box
         self.message_input = TextInput(multiline=True)
         self.add_widget(self.message_input)
 
-        self.send_button = Button(text='Send Email')
+        self.send_button = Button(text='Send Email') #send button
         self.send_button.bind(on_press=self.send_email_gui)
         self.add_widget(self.send_button)
 
@@ -36,7 +37,7 @@ class EmailForm(BoxLayout):
         subject = self.subject_input.text
         message = self.message_input.text
 
-        if not all([recipient, subject, message]):
+        if not all([recipient, subject, message]):             #exception handling
             self.status_label.text = "All fields are required."
             return
 
@@ -52,7 +53,7 @@ class EmailApp(App):
         self.title = "Email Sender App"
         return EmailForm()
 
-if __name__ == '__main__':
+if __name__ == '__main__': #main function
     EmailApp().run()
 
 
