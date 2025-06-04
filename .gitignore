@@ -21,4 +21,4 @@ credentials.py
 # Test output
 *.log
 *.db
-screenshots/
+#screenshots/
