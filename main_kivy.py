@@ -6,6 +6,11 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from Email_sender import send_email
 from credentials import email_address, email_password
+import re
+
+def is_valid_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, email)
 
 class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
@@ -39,6 +44,11 @@ class EmailForm(BoxLayout):
 
         if not all([recipient, subject, message]):             #exception handling
             self.status_label.text = "All fields are required."
+            return
+
+        if not is_valid_email(recipient):
+            self.status_label.text = "Invalid recipient email format"
+            self.status_label.color = (1, 0, 0, 1)
             return
 
         success, feedback = send_email(sender, password, recipient, subject, message)
