@@ -20,7 +20,7 @@ In your terminal/command prompt, run:
 If using git, clone:
 
 ```bash
-   git clone <https://github.com/angelkautsi/EMAIL-SENDER-APPLICATION.git>
+   git clone https://github.com/angelkautsi/EMAIL-SENDER-APPLICATION.git
 ```
 Otherwise, manually download and extract the ZIP file.
 
