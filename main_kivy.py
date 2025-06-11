@@ -18,21 +18,26 @@ class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)   #constructor
 
-        self.add_widget(Label(text='Recipient Email')) #recipient button
-        self.recipient_input = TextInput(multiline=False)
+        self.add_widget(Label(text='Recipient Email', font_size=16, size_hint_y=None, height=30)) #recipient button
+        self.recipient_input = TextInput(multiline=False, font_size=14, size_hint_y=None, height=40)
         self.add_widget(self.recipient_input)
 
-        self.add_widget(Label(text='Subject')) #subject textbox button
-        self.subject_input = TextInput(multiline=False)
+        self.add_widget(Label(text='Subject', font_size=16, size_hint_y=None, height=30)) #subject textbox button
+        self.subject_input = TextInput(multiline=False, font_size=14, size_hint_y=None, height=40)
         self.add_widget(self.subject_input)
 
-        self.add_widget(Label(text='Message'))  #message button / text box
-        self.message_input = TextInput(multiline=True)
+        self.add_widget(Label(text='Message', font_size=16, size_hint_y=None, height=30))  #message button / text box
+        self.message_input = TextInput(multiline=True, font_size=14, size_hint_y=None, height=40)
         self.add_widget(self.message_input)
 
-        self.send_button = Button(text='Send Email') #send button
-        self.send_button.bind(on_press=self.send_email_gui)
-        self.add_widget(self.send_button)
+        self.send_button = Button(
+            text='Send Email',
+            background_color=(0.2, 0.6, 1, 1), #soft blue
+            color=(1, 1, 1, 1), #white text
+            font_size=16,
+            size_hint=(1, None),
+            height=50
+        )
 
         self.status_label = Label(text='', color=(1,0,0,1)) #red color for showing errors
         self.add_widget(self.status_label)
