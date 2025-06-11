@@ -24,35 +24,47 @@ def get_recent_emails(limit=5):
                 if isinstance(response_part, tuple):
                     msg = email.message_from_bytes(response_part[1])
 
-                    subject, encoding = decode_header(msg["Subject"])[0]
-                    if isinstance(subject, bytes):
-                        subject = subject.decode(encoding or "utf-8")
+                    # Safe subject parsing
+                    raw_subject = msg["Subject"]
+                    if raw_subject is None:
+                        subject = "(No Subject)"
+                    else:
+                        try:
+                            subject, encoding = decode_header(raw_subject)[0]
+                            if isinstance(subject, bytes):
+                                subject = subject.decode(encoding or "utf-8")
+                        except:
+                            subject = str(raw_subject)
 
-                    from_ = msg.get("From")
+                    # Safe sender
+                    from_ = msg.get("From") or "(Unknown sender)"
 
-                    #getting email body
+                    # Safe body
                     body = ""
-                    if msg.is_multipart():
-                        for part in msg.walk():
-                            content_type = part.get_content_type()
-                            if content_type == "text/plain":
-                                try:
-                                    body = part.get_payload(decode=True).decode()
+                    try:
+                        if msg.is_multipart():
+                            for part in msg.walk():
+                                if part.get_content_type() == "text/plain":
+                                    payload = part.get_payload(decode=True)
+                                    if payload:
+                                        body = payload.decode(errors="ignore")
                                     break
-                                except:
-                                    body = "(Cannot decode body)"
-                            else:
-                                    body = part.get_payload(decode=True).decode(errors="ignore")
+                        else:
+                            payload = msg.get_payload(decode=True)
+                            if payload:
+                                body = payload.decode(errors="ignore")
+                    except:
+                        body = "(Unable to decode message content.)"
 
-                            emails.append({
-                                "from": from_,
-                                "subject": subject,
-                                "body": body
-                            })
-            imap.logout()
-            print("Emails retrieved:", len(emails))  # Shows how many emails were fetched
-            return emails
+                emails.append({
+                    "from": from_,
+                    "subject": subject,
+                    "body": body
+                })
+        imap.logout()
+        print("Emails retrieved:", len(emails))  # Shows how many emails were fetched
+        return emails
 
     except Exception as e:
         print("IMAP ERROR:", e)  # Add this
-        return [{"subject": "Error", "from": "", "body": str(e)}]
+
