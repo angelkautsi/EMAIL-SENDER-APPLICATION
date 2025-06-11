@@ -5,6 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
 from Email_sender import send_email
 from credentials import email_address, email_password
 from Email_reader import get_recent_emails
@@ -115,17 +117,32 @@ class EmailForm(BoxLayout):
     def show_inbox(self, instance):
         emails = get_recent_emails(limit=5)
 
-        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        scrollview = ScrollView(size_hint=(1,1))
+        layout = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=10)
+        layout.bind(minimum_height=layout.setter('height'))
+
         for email_data in emails:
-            snippet = f"From: {email_data['from']}\nSubject: {email_data['subject']}\n\n{email_data['body'][:150]}..."
-            label= Label(text=snippet, size_hint_y=None, height=200, font_size=14, halign="left", valign="top")
-            label.text_size = (300, None)
+            snippet = f"From: {email_data[f'from']}\nSubject: {email_data[f'subject']}\n\n{email_data['body'][:200]}..."
+            label = Label(
+                text=snippet,
+                size_hint_y=None,
+                height=200,
+                font_size=14,
+                halign="left",
+                valign="top",
+                text_size=(380, None),
+                color=(1, 1, 1, 1)
+            )
             layout.add_widget(label)
+        scrollview.add_widget(layout)
 
         close_button = Button(text="Close", size_hint=(1, None), height=40, background_color=(0.8, 0, 0, 1), color= (1, 1, 1, 1))
-        popup = Popup(title="Inbox Preview", content=layout, size_hint=(None, None), size=(400, 500), auto_dismiss=False)
+        box = BoxLayout(orientation='vertical')
+        box.add_widget(scrollview)
+        box.add_widget(close_button)
+
+        popup = Popup(title= "Inbox Preview", content=box, size_hint=(None, None), size=(450, 550), auto_dismiss=False)
         close_button.bind(on_press=popup.dismiss)
-        layout.add_widget(close_button)
         popup.open()
 
 
