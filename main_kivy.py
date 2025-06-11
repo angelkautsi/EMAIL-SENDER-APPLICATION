@@ -7,6 +7,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from Email_sender import send_email
 from credentials import email_address, email_password
+from Email_reader import get_recent_emails
 import re
 
 def is_valid_email(email):
@@ -57,6 +58,18 @@ class EmailForm(BoxLayout):
         self.clear_button.bind(on_press=self.clear_fields)
         self.add_widget(self.clear_button)
 
+        self.inbox_button = Button(
+            text = 'View Inbox',
+            background_color = (0.2, 0.8, 0.4, 1), #greenish
+            color = (1, 1, 1, 1),
+            font_size = 16,
+            size_hint = (1, None),
+            height = 50
+        )
+        self.inbox_button.bind(on_press=self.show_inbox)
+        self.add_widget(self.inbox_button)
+
+
     def show_popup(self, title, message):
         layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
         layout.add_widget(Label(text=message, font_size=14))
@@ -99,6 +112,21 @@ class EmailForm(BoxLayout):
         self.message_input.text = ''
         self.status_label.text = ''
 
+    def show_inbox(self, instance):
+        emails = get_recent_emails(limit=5)
+
+        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        for email_data in emails:
+            snippet = f"From: {email_data['from']}\nSubject: {email_data['subject']}\n\n{email_data['body'][:150]}..."
+            label= Label(text=snippet, size_hint_y=None, height=200, font_size=14, halign="left", valign="top")
+            label.text_size = (300, None)
+            layout.add_widget(label)
+
+        close_button = Button(text="Close", size_hint=(1, None), height=40, background_color=(0.8, 0, 0, 1), color= (1, 1, 1, 1))
+        popup = Popup(title="Inbox Preview", content=layout, size_hint=(None, None), size=(400, 500), auto_dismiss=False)
+        close_button.bind(on_press=popup.dismiss)
+        layout.add_widget(close_button)
+        popup.open()
 
 
 class EmailApp(App):
