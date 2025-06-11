@@ -40,6 +40,8 @@ class EmailForm(BoxLayout):
             size_hint=(1, None),
             height=50
         )
+        self.send_button.bind(on_press=self.send_email_gui)
+
         self.add_widget(self.send_button)
         self.status_label = Label(text='', color=(1,0,0,1)) #red color for showing errors
         self.add_widget(self.status_label)
