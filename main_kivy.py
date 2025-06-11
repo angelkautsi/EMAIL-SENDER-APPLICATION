@@ -16,7 +16,9 @@ def is_valid_email(email):
 
 class EmailForm(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(orientation='vertical', padding=30, spacing=12, **kwargs)   #constructor
+        super().__init__(orientation='vertical', padding=30, spacing=20, **kwargs)   #constructor
+
+        self.add_widget(Label(text='Email Sender App', font_size=20, bold=True, size_hint_y=None, height=40))
 
         self.add_widget(Label(text='Recipient Email', font_size=16, size_hint_y=None, height=30)) #recipient button
         self.recipient_input = TextInput(multiline=False, font_size=14, size_hint_y=None, height=40)
@@ -38,17 +40,22 @@ class EmailForm(BoxLayout):
             size_hint=(1, None),
             height=50
         )
-
+        self.add_widget(self.send_button)
         self.status_label = Label(text='', color=(1,0,0,1)) #red color for showing errors
         self.add_widget(self.status_label)
 
     def show_popup(self, title, message):
-        popup_content = Label(text=message, padding=10)
+        layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
+        layout.add_widget(Label(text=message, font_size=14))
+
+        close_button = Button(text="Close", size_hint=(1, None), height=40, background_color=(0.8, 0, 0, 1), color=(1, 1, 1, 1))
         popup = Popup(title=title,
-                      content=popup_content,
+                      content=layout,
                       size_hint=(None, None),
-                      size=(300, 200),
-                      auto_dismiss=True)
+                      size=(350, 200),
+                      auto_dismiss=False)
+        close_button.bind(on_press=popup.dismiss)
+        layout.add_widget(close_button)
         popup.open()
 
     def send_email_gui(self, instance):
@@ -57,10 +64,6 @@ class EmailForm(BoxLayout):
         recipient = self.recipient_input.text
         subject = self.subject_input.text
         message = self.message_input.text
-
-        if not all([recipient, subject, message]):             #exception handling
-            self.status_label.text = "All fields are required."
-            return
 
         if not all([recipient, subject, message]):
             self.show_popup("Missing fields", "All fields must be filled")
