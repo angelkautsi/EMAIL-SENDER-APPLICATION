@@ -50,7 +50,9 @@ def get_recent_emails(limit=5):
                                 "body": body
                             })
             imap.logout()
+            print("Emails retrieved:", len(emails))  # Shows how many emails were fetched
             return emails
 
     except Exception as e:
-        return[{"subject": "Error", "from": "", "body": str(e)}]
+        print("IMAP ERROR:", e)  # Add this
+        return [{"subject": "Error", "from": "", "body": str(e)}]
