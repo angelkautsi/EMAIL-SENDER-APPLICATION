@@ -46,6 +46,17 @@ class EmailForm(BoxLayout):
         self.status_label = Label(text='', color=(1,0,0,1)) #red color for showing errors
         self.add_widget(self.status_label)
 
+        self.clear_button = Button(
+            text= 'Clear all fields',
+            background_color=(0.5, 0.5, 0.5, 1), #gray color
+            color = (1, 1, 1, 1), #white
+            font_size = 16,
+            size_hint = (1, None),
+            height = 50
+        )
+        self.clear_button.bind(on_press=self.clear_fields)
+        self.add_widget(self.clear_button)
+
     def show_popup(self, title, message):
         layout = BoxLayout(orientation='vertical', padding=20, spacing=10)
         layout.add_widget(Label(text=message, font_size=14))
@@ -81,6 +92,12 @@ class EmailForm(BoxLayout):
             self.status_label.color = (0, 0.6, 0, 1) #green if successful
         else:
             self.status_label.color = (1, 0, 0, 1)#red if not
+
+    def clear_fields(self, instance):
+        self.recipient_input.text = ''
+        self.subject_input.text = ''
+        self.message_input.text = ''
+        self.status_label.text = ''
 
 
 
