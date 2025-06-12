@@ -115,36 +115,67 @@ class EmailForm(BoxLayout):
         self.status_label.text = ''
 
     def show_inbox(self, instance):
-        emails = get_recent_emails(limit=5)
+        try:
+            # ... email creation and layout loop ...
+            emails = get_recent_emails(limit=5)
+            print(">>> Emails passed to GUI:", len(emails))  # DEBUG LINE
 
-        scrollview = ScrollView(size_hint=(1,1))
-        layout = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=10)
-        layout.bind(minimum_height=layout.setter('height'))
+            layout = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=10)
+            layout.bind(minimum_height=layout.setter('height'))
 
-        for email_data in emails:
-            snippet = f"From: {email_data[f'from']}\nSubject: {email_data[f'subject']}\n\n{email_data['body'][:200]}..."
-            label = Label(
-                text=snippet,
-                size_hint_y=None,
-                height=200,
-                font_size=14,
-                halign="left",
-                valign="top",
-                text_size=(380, None),
+            for email_data in emails:
+                print(">>> Email content:", email_data)  # DEBUG LINE
+                try:
+                    # Clean and shortened the body preview
+                    raw_body = email_data['body'].replace('\r', '').replace('\n', ' ').replace('\xa0', ' ')
+                    short_body = raw_body[:200].strip() + "..."
+
+                    snippet = f"[b]From:[/b] {email_data['from']}\n[b]Subject:[/b] {email_data['subject']}\n\n{short_body}"
+
+                    label = Label(
+                        text=snippet,
+                        markup=True,  # to support [b][/b]
+                        size_hint_y=None,
+                        height=180,
+                        font_size=14,
+                        halign="left",
+                        valign="top",
+                        text_size=(380, None),
+                        color=(1, 1, 1, 1)
+                    )
+
+                    layout.add_widget(label)
+                except Exception as e:
+                    print(">>> Error rendering email label:", e)
+
+            scrollview = ScrollView(size_hint=(1, 1))
+            scrollview.add_widget(layout)
+
+            close_button = Button(
+                text="Close",
+                size_hint=(1, None),
+                height=40,
+                background_color=(0.8, 0, 0, 1),
                 color=(1, 1, 1, 1)
             )
-            layout.add_widget(label)
-        scrollview.add_widget(layout)
 
-        close_button = Button(text="Close", size_hint=(1, None), height=40, background_color=(0.8, 0, 0, 1), color= (1, 1, 1, 1))
-        box = BoxLayout(orientation='vertical')
-        box.add_widget(scrollview)
-        box.add_widget(close_button)
+            box = BoxLayout(orientation='vertical')
+            box.add_widget(scrollview)
+            box.add_widget(close_button)
 
-        popup = Popup(title= "Inbox Preview", content=box, size_hint=(None, None), size=(450, 550), auto_dismiss=False)
-        close_button.bind(on_press=popup.dismiss)
-        popup.open()
+            popup = Popup(
+                title="Inbox Preview",
+                content=box,
+                size_hint=(None, None),
+                size=(450, 520),
+                auto_dismiss=False
+            )
+            close_button.bind(on_press=popup.dismiss)
+            popup.open()
 
+        except Exception as e:
+            print("Error rendering inbox", e)
+            self.show_popup("Error", "Unable to render inbox:\n{e}")
 
 class EmailApp(App):
     def build(self):
