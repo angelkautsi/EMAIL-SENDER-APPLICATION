@@ -29,15 +29,16 @@ Otherwise, manually download and extract the ZIP file.
 ## 4. Project structure
 The project contains the following important files:
 
-| File Name                 | Description                              |
-|---------------------------|------------------------------------------|
-| `main_kivy.py`            | Main file for running the application    |
-| `Email_sender.py`         | File containing email operations         |
-| `credentials.py`          | Email address and app password           |
-| `screenshots`             | Screenshots of the application interface |
-| `README.md`               | Basic project information                |
-| `USER_MANUAL.md`          | Instructions on how to use the app       |
-| `SETUP_INSTRUCTIONS.docx` | This setup guide                         |
+| File Name                 | Description                                |
+|---------------------------|--------------------------------------------|
+| `main_kivy.py`            | Main file for running the application      |
+| `Email_sender.py`         | File containing email operations           |
+| `credentials.py`          | Email address and app password             |
+| `Email_reader.py`         | Email inbox viewing using imaplib in Gmail |
+| `screenshots`             | Screenshots of the application interface   |
+| `README.md`               | Basic project information                  |
+| `USER_MANUAL.md`          | Instructions on how to use the app         |
+| `SETUP_INSTRUCTIONS.docx` | This setup guide                           |
 
 ---
 ## 5. Running the Application
@@ -53,9 +54,10 @@ This will open the Email Sender Application window.
 ---
 ## 6. Common Problems & Solutions
 
-| Problem            | Solution                                                     |
-| ------------------ |--------------------------------------------------------------|
-| App does not open  | Make sure Python and Kivy are properly installed             |
+| Problem | Solution                                                     |
+|  |--------------------------------------------------------------|
+| App does not open | Make sure Python and Kivy are properly installed             |
 | Screen layout looks broken | Resize the app window or check for missing Kivy dependencies |
+| Inbox preview does not open | Go through the code again and check if everything is in place. Edit if need be |
 
 ---
