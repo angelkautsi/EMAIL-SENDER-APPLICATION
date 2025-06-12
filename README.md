@@ -21,6 +21,7 @@ It supports sending emails from anywhere and at anytime provided you have intern
 3. Enabling attatchments for documents in .docx, .doc, .ppt, .jpn, etc
 4. Adding html script for better message screening
 5. Adding more screens for a cleaner look
+6. Adding a reply to email feature
 
 
 ## AUTHOR
