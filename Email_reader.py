@@ -2,6 +2,7 @@ import imaplib
 import email
 from email.header import decode_header
 from shlex import split
+import re
 
 from credentials import email_address, email_password
 
@@ -39,20 +40,36 @@ def get_recent_emails(limit=5):
                     # Safe sender
                     from_ = msg.get("From") or "(Unknown sender)"
 
+                    def strip_html(html):
+                        # Remove HTML tags and unescape entities
+                        clean = re.sub(r'<[^>]+>', '', html)
+                        clean = clean.replace('&nbsp;', ' ').replace('&amp;', '&')
+                        return clean.strip()
+
                     # Safe body
                     body = ""
                     try:
                         if msg.is_multipart():
                             for part in msg.walk():
-                                if part.get_content_type() == "text/plain":
-                                    payload = part.get_payload(decode=True)
-                                    if payload:
-                                        body = payload.decode(errors="ignore")
-                                    break
+                                content_type = part.get_content_type()
+                                payload = part.get_payload(decode=True)
+
+                                if payload:
+                                    decoded = payload.decode(errors="ignore")
+
+                                    if content_type == "text/plain":
+                                        body = decoded
+                                        break
+                                    elif content_type == "text/html" and not body:
+                                        body = strip_html(decoded)
                         else:
                             payload = msg.get_payload(decode=True)
                             if payload:
-                                body = payload.decode(errors="ignore")
+                                decoded = payload.decode(errors="ignore")
+                                if msg.get_content_type() == "text/html":
+                                    body = strip_html(decoded)
+                                else:
+                                    body = decoded
                     except:
                         body = "(Unable to decode message content.)"
 
