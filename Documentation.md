@@ -17,6 +17,7 @@ The main objective of this project is to build a **user-friendly email client ap
 * Input email details (recipient, subject, message)
 * Send emails using Gmail SMTP
 * Receive real-time feedback (success or failure)
+* Be able to view recent emails from application
 
 This project demonstrates **network programming concepts** and **graphical user interface development**, integrating them into a complete, functional tool.
 
@@ -24,13 +25,13 @@ This project demonstrates **network programming concepts** and **graphical user 
 
 ### 3. **Tools & Technologies Used**
 
-| Tool / Library    | Purpose                                        |
-|-------------------| ---------------------------------------------- |
-| **Python 3.13**   | Core programming language                      |
-| **Kivy**          | Cross-platform GUI development                 |
-| **smtplib**       | Python library to interact with SMTP servers   |
-| **email.message** | To format and structure email content properly |
-| **Git & GitHub**  | Version control and source code hosting        |
+| Tool / Library   | Purpose |
+|------------------|  |
+| **Python 3.13**  | Core programming language |
+| **Kivy**         | Cross-platform GUI development |
+| **smtplib**      | Python library to interact with SMTP servers |
+| **imaplib**      | Gmail mapping library to show recent emails |
+| **Git & GitHub** | Version control and source code hosting |
 
 ---
 
@@ -55,12 +56,46 @@ This project is based on **Client-Server communication over the SMTP (Simple Mai
 4. **Transmission**: The composed email is sent from the client (our app) to the server (Gmail).
 5. **Response Handling**: The app checks if the email was successfully sent or if errors occurred.
 
-#### Key Networking Features:
+### IMAP Connectivity in the App
 
-* **Client-Server Model**: The app is the client, Gmail SMTP is the server.
-* **Port 587**: Standard port for sending email securely using TLS.
-* **App Password**: Enhances security by avoiding actual password use in scripts.
-* **Error Handling**: Exceptions for login failure, invalid recipients, etc., are managed cleanly.
+This application uses **IMAP (Internet Message Access Protocol)** to securely connect to Gmail and retrieve incoming emails.
+
+IMAP allows the app to access messages directly from the Gmail server without downloading them permanently. Using Python’s `imaplib` and `email` libraries, the application:
+
+- Connects to the Gmail IMAP server at `imap.gmail.com` using SSL
+- Authenticates using the **App Password**
+- Selects the inbox and fetches the latest emails
+- Parses each email to extract:
+  - **Sender**
+  - **Subject**
+  - **Body**
+- Converts HTML-formatted messages into clean, readable plain text using a custom HTML-stripper function
+
+This functionality powers the **Inbox Viewer** feature inside the app, allowing users to read replies or incoming messages **without leaving the application**.
+
+----
+
+### Key Networking Features Implemented
+
+My application integrates several core networking functionalities using internet protocols and secure communication libraries:
+
+- **SMTP (Simple Mail Transfer Protocol)**  
+  Used for sending emails securely through Gmail’s SMTP server (`smtp.gmail.com`) via port 587 with TLS encryption. Handled using Python’s built-in `smtplib`.
+
+- **IMAP (Internet Message Access Protocol)**  
+  Enables secure access to Gmail's inbox server (`imap.gmail.com`) using `imaplib`. Messages are retrieved in real-time from the server rather than being stored locally.
+
+- **App Password Authentication**  
+  Uses Gmail’s App Password feature (via OAuth-2FA setup) instead of storing raw passwords. This enhances security and supports Gmail’s modern authentication policies.
+
+- **Secure SSL/TLS Connections**  
+  All server communications (SMTP and IMAP) are encrypted using SSL or TLS, preventing unauthorized interception of credentials and email content.
+
+- **Real-time Inbox Fetching**  
+  The app connects to the Gmail server to fetch and display the latest emails directly inside the application interface without relying on third-party platforms.
+
+- **HTML Message Parsing and Cleanup**  
+  Incoming emails that arrive in HTML format are stripped and parsed into readable plain text using custom logic, allowing safe rendering within the app.
 
 ---
 
@@ -83,6 +118,7 @@ Include the following in the documentation:
 * Success message after sending
 * Input validation error
 * Email received in Gmail (message received)
+* Inbox preview
 
  All screenshots are saved under:
 
@@ -98,6 +134,7 @@ Include the following in the documentation:
 EMAIL-SENDER-APPLICATION/
 ├── main_kivy.py           # Main GUI script
 ├── Email_sender.py        # SMTP email sending logic
+├── Email_reader.py        # IMAP inbox viewing logic
 ├── credentials.py         # Email & app password (excluded via .gitignore)
 ├── .gitignore             # Prevents sensitive files from being tracked
 ├── README.md              # Project summary and setup guide
@@ -111,6 +148,7 @@ EMAIL-SENDER-APPLICATION/
 
 * Successfully built a cross-platform GUI email sender using Python and Kivy
 * Demonstrated secure client-server communication using SMTP
+* Learned to work with the Gmail IMAP library to be able to connect my inbox to the application
 * Gained experience with GUI layout, error handling, and modular programming
 * Maintained proper GitHub version control and documentation
 
