@@ -1,2 +1,2 @@
-email_address = "angelkautsi09@gmail.com"
-email_password = "tbbx ezdw wzsn eekb"
+email_address = "email@gmail.com"
+email_password = "app_password"
